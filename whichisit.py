@@ -1,5 +1,4 @@
 import re
-import os
 import sys
 import math
 import numpy as np
@@ -9,10 +8,10 @@ punc_pattern = re.compile('[\w\d\s]')
 
 
 def main(*args):
-    trained = [train(x) for x in [punc_replace(t) for t in args]]
-    punc_sent = punc_pattern.sub('', raw_input('Paste a sentence from your favorite book: '))
+    trained = [train(x) for x in [punc_replace(t) for t in args[:-1]]]
+    punc_sent = punc_pattern.sub('', args[-1])
     perplexities = [perplexity(punc_sent, trainfile) for trainfile in trained]
-    print 'This is probably from', args[perplexities.index(max(perplexities))][:-3]
+    return args[perplexities.index(max(perplexities))][:-3]
 
 
 def perplexity(sent, dist):
@@ -42,4 +41,4 @@ def punc_replace(filename):
             
 
 if __name__ == '__main__':
-    main(sys.argv[1], sys.argv[2])
+    print 'This is probably from {}.'.format(main(sys.argv[1], sys.argv[2]))
